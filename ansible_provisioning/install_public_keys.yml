@@ -1,0 +1,20 @@
+---
+- hosts: raspberry_with_password
+  tasks:
+    - name: create ssh directory
+      sudo: yes
+      file: 
+        path=/home/pi/.ssh 
+        state=directory
+        owner=pi
+        group=pi
+        mode=700
+    - name: create authorized keys file 
+      sudo: yes
+      copy: 
+        src=../authorized_keys 
+        dest=/home/pi/.ssh/authorized_keys 
+        owner=pi
+        group=pi
+        force=yes
+        mode=600

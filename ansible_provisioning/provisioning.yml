@@ -1,0 +1,70 @@
+---
+- hosts: raspberry
+  tasks:
+    - name: create roomcontrol user
+      sudo: yes
+      user: 
+        name=roomcontrol 
+        append=yes
+        state=present
+        createhome=yes
+        shell=/bin/bash
+        password=*
+    - name: ensure roomcontrol home directory is writable by group
+      sudo: yes
+      file: 
+        path=/home/roomcontrol
+        state=directory
+        mode=775
+    - name: create deployment user
+      sudo: yes
+      user: 
+        name=deployment 
+        append=yes
+        state=present
+        groups="adm,sudo,roomcontrol"
+        createhome=yes
+        shell=/bin/bash
+        password=*
+    - name: ensure right file attributes for sudoers file
+      sudo: yes
+      file: 
+        path=/etc/sudoers.d/deployment 
+        owner=root 
+        group=root 
+        mode=0440
+        state=touch
+    - name: add a new string at the end of the file
+      sudo: yes
+      lineinfile: 
+        dest=/etc/sudoers.d/deployment
+        regexp=''
+        insertafter=EOF
+        line='deployment ALL=(ALL) NOPASSWD:ALL'
+    - name: create ssh directory
+      sudo: yes
+      file: 
+        path=/home/deployment/.ssh 
+        state=directory
+        owner=deployment
+        group=deployment
+        mode=700
+
+    - name: copy authorized keys
+      sudo: yes
+      command:
+        cp /home/{{ansible_ssh_user}}/.ssh/authorized_keys /home/deployment/.ssh/authorized_keys
+
+    - name: ensure right file permissions
+      sudo: yes
+      file: 
+        path=/home/deployment/.ssh/authorized_keys 
+        owner=deployment
+        group=deployment
+        mode=600
+
+    - name: install linux packages
+      sudo: yes
+      action: apt pkg={{item}} state=installed update_cache=yes cache_valid_time=3600
+      with_items:
+        - vim

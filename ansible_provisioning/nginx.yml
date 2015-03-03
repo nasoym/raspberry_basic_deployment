@@ -1,0 +1,23 @@
+---
+- hosts: raspberry
+  tasks:
+    - name: install nginx
+      sudo: yes
+      apt: 
+        name=nginx 
+        update_cache=yes
+        state=installed
+    - name: start nginx
+      sudo: yes
+      service:
+        name=nginx
+        state=started
+    - name: ensure www folder is writable by group
+      sudo: yes
+      file: 
+        path=/usr/share/nginx/www
+        group=deployment
+        state=directory
+        recurse=yes
+        mode=0775
+

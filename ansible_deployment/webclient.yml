@@ -1,0 +1,19 @@
+---
+- hosts: raspberry
+  tasks:
+    - name: stop nginx
+      sudo: yes
+      service:
+        name=nginx
+        state=stopped
+    - name: copy webclient
+      sudo: yes
+      unarchive: 
+        src=../archive/webclient.tar
+        dest=/usr/share/nginx/www
+    - name: start nginx
+      sudo: yes
+      service:
+        name=nginx
+        state=started
+

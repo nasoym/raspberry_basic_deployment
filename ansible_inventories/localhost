@@ -1,0 +1,2 @@
+raspberry_with_password ansible_ssh_host=localhost ansible_ssh_user=pi ansible_ssh_port=7022 ansible_ssh_pass=raspberry
+raspberry ansible_ssh_host=localhost ansible_ssh_user=pi ansible_ssh_port=7022
