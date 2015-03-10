@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-ANSIBLE_INVENTORY="ansible_inventories/localhost" 
-if [ "${TARGET}" = "production" ]; then
-  echo "target is production"
-  ANSIBLE_INVENTORY="ansible_inventories/production" 
+ANSIBLE_INVENTORY="ansible_inventories/production" 
+if [ "${TARGET}" = "localhost" ]; then
+  echo "target is localhost"
+  ANSIBLE_INVENTORY="ansible_inventories/localhost" 
 fi
 
 : ${OPTIONS:=''}
